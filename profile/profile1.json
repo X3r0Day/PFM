@@ -1,5 +1,9 @@
 {
     "RUN": {
+        "nmapscan": {
+            "enabled": "True",
+            "scantype": "nmap -sV"
+        },
         "nmap": "True",
         "subfinder": "True",
         "assetfinder": "True",
