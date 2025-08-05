@@ -2,10 +2,10 @@ import json
 import threading
 import subprocess
 from pathlib import Path
+from decorator import log
 
 # Scanning modules
-from tests.nmap import nmap
-from tests.subfinder import subfinder
+
 
 # Hardcoding profile for now
 profile = 'profile1.json'
@@ -34,9 +34,10 @@ def runTool(name, command):
 def startProf(data, target):
     threads = []
 
-    if data["RUN"].get("nmap") == "True":
+    if data["RUN"]["nmapscan"]["enabled"] == "True":
         print("Running NMAP")
-        t = threading.Thread(target=runTool, args=("NMAP", f"nmap -T4 {target} | tee nmapscan.txt"))
+        scanType = data["RUN"]["nmapscan"]["scantype"]
+        t = threading.Thread(target=runTool, args=("NMAP", f"{scanType} {target} | tee nmapscan.txt"))
         threads.append(t)
         t.start()
 
@@ -48,12 +49,11 @@ def startProf(data, target):
 
     if data["RUN"].get("assetfinder") == "True":
         print("Running Assetfinder")
-        # t = threading.Thread(target=runTool, args=("Assetfinder", f"assetfinder -subs-only {target} | tee assetfinder.txt"))
-        # threads.append(t)
-        # t.start()
+        t = threading.Thread(target=runTool, args=("Assetfinder", f"assetfinder -subs-only {target} | tee assetfinder.txt"))
+        threads.append(t)
+        t.start()
 
     # Wait for all tools to finish
     for t in threads:
         t.join()
-
-
+        log.suc("Scan Completed!")

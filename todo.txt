@@ -12,6 +12,8 @@ Where I left:
 What I need to do now:
 
 - Make standalone files for each scans? Maybe... I will see about it later, for now, it's handled in check.py
+- in check.py now I need to make it so that it will combine and sort all the duplicate subdomains it found
+- Update the profile to be even more better (change it similar to nmapscan entry)
 
 
 Points to be noted:

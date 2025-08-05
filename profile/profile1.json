@@ -8,6 +8,7 @@
         "subfinder": "True",
         "assetfinder": "True",
         "amass": {
+            "enabled": "False",
             "active": "True",
             "passive": "False"
         },
