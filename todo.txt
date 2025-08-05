@@ -7,11 +7,12 @@ Where I left:
 - I did decorators (basic logging things like log.suc(msg))
 - Next, I added checkUrl.py which will check for the urls (completed)
 - Now I have to make the enter target field more good looking.
+- Made a very simple python file which will check what profiles/tools are enabled by reading the profile.json and run it
 
 What I need to do now:
 
-- Make a python file which will check what profiles/tools are enabled by reading the profile.json
-- Make scan.py complete.
+- Make standalone files for each scans? Maybe... I will see about it later, for now, it's handled in check.py
+
 
 Points to be noted:
 

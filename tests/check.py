@@ -1,30 +1,59 @@
 import json
-import sys
+import threading
+import subprocess
 from pathlib import Path
 
-# Custom modules
-from tests.scan import scanTarget
+# Scanning modules
+from tests.nmap import nmap
+from tests.subfinder import subfinder
 
-# sys.path.append(str(Path(__file__).parent.parent))
-
-profile = 'profile1.json' # Hardcoding profile1.json for now, later I will make it through userinput
+# Hardcoding profile for now
+profile = 'profile1.json'
 
 def loadProf(target):
-    with open(Path(__file__).parent.parent / 'profile' / profile) as f:
+    profile_path = Path(__file__).parent.parent / 'profile' / profile
+    with open(profile_path) as f:
         data = json.load(f)
         startProf(data, target)
 
+def runTool(name, command):
+    try:
+        result = subprocess.run(
+            command,
+            shell=True,
+            capture_output=True,
+            text=True
+        )
+        print(f"\n-- Output From {name} -- ")
+        print(result.stdout)
+        if result.stderr:
+            print(f"{name} stderr: {result.stderr}")
+    except Exception as e:
+        print(f"[{name} error]: {e}")
 
 def startProf(data, target):
-    if data["RUN"]["nmap"] == "True": # Checking NMAP
+    threads = []
+
+    if data["RUN"].get("nmap") == "True":
         print("Running NMAP")
-        scanTarget(target)
-    
-    if data["RUN"]["subfinder"] == "True": # Checking subfinder
-        print("Running subfinder")
+        t = threading.Thread(target=runTool, args=("NMAP", f"nmap -T4 {target} | tee nmapscan.txt"))
+        threads.append(t)
+        t.start()
 
-    if data["RUN"]["assetfinder"] == "True": # Checking assetfinder
-        print("Running assetfinder")
+    if data["RUN"].get("subfinder") == "True":
+        print("Running Subfinder")
+        t = threading.Thread(target=runTool, args=("Subfinder", f"subfinder -d {target} -silent | tee subfinder.txt"))
+        threads.append(t)
+        t.start()
+
+    if data["RUN"].get("assetfinder") == "True":
+        print("Running Assetfinder")
+        # t = threading.Thread(target=runTool, args=("Assetfinder", f"assetfinder -subs-only {target} | tee assetfinder.txt"))
+        # threads.append(t)
+        # t.start()
+
+    # Wait for all tools to finish
+    for t in threads:
+        t.join()
 
 
-        

@@ -1,6 +1,6 @@
 # This will scan for ports
 
-def scanTarget(target):
+def nmap(target):
     print("Scanning the target:", target)
     
     
