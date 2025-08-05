@@ -42,10 +42,8 @@ def actionSelector():
 
         if selected == "1":
             print("Create Profile is comming soon...")
-            mainScreen()
         elif selected == "2":
             print("Select Profile is comming soon...")
-            mainScreen()
         elif selected == "3":
             global TARGET
             TARGET = input(f"Enter Target {Style.BRIGHT}(e.g, google.com){Fore.YELLOW}\n> {Style.RESET_ALL}")
