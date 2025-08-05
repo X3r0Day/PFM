@@ -1,0 +1,1 @@
+### Not gonna edit readme yet... I've been kinda busy with many things so I might not push many updates, but this will be completed fs.

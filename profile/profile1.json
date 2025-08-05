@@ -1,0 +1,15 @@
+{
+    "RUN": {
+        "nmap": "True",
+        "subfinder": "True",
+        "assetfinder": "True",
+        "amass": {
+            "active": "True",
+            "passive": "False"
+        },
+        "crt.sh": "True",
+        "webarchive-CDX": "False",
+        "VirusTotal": "False",
+        "github-subdomains": "False"
+    }
+}
