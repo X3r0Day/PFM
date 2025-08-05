@@ -24,9 +24,13 @@ def clearScreen():
     os.system('cls' if os.name=='nt' else 'clear')
     return
 
+def startScreen():
+    print(f"{Fore.BLUE}Please select:")
+    print("1. Subdomain discovery")
+    print("2. All in one scan")
 
 def mainScreen():
-    print(f"{Fore.BLUE}Please select: ")
+    print(f"{Fore.BLUE}Please select:")
     print("1. Create Profile (Comming Soon)")
     print("2. Select Profile (Comming Soon)")
     print("3. Select Target")
