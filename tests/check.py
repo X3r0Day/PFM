@@ -60,5 +60,6 @@ def startProf(data, target):
         '''
         So this will combine sort and combine all the subdomains and filter out duplicates and check for alive domains
         '''
+        log.suc("Scan Completed! Filtering out garbage.")
         subprocess.run("cat *.txt | sort -u  > filtered.txt", shell=True)
-        log.suc("Scan Completed!")
+        log.suc("Garbage filtered out! Created 'filtered.txt'!")
