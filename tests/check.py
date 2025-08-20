@@ -37,7 +37,7 @@ def startProf(data, target):
     if data["RUN"]["nmapscan"]["enabled"] == "True":
         print("Running NMAP")
         scanType = data["RUN"]["nmapscan"]["scantype"]
-        t = threading.Thread(target=runTool, args=("NMAP", f"{scanType} {target} | tee nmapscan.txt"))
+        t = threading.Thread(target=runTool, args=("NMAP", f"{scanType} {target} | tee nmapscan.scan"))
         threads.append(t)
         t.start()
 
@@ -53,7 +53,12 @@ def startProf(data, target):
         threads.append(t)
         t.start()
 
+
     # Wait for all tools to finish
     for t in threads:
         t.join()
+        '''
+        So this will combine sort and combine all the subdomains and filter out duplicates and check for alive domains
+        '''
+        subprocess.run("cat *.txt | sort -u  > filtered.txt", shell=True)
         log.suc("Scan Completed!")
