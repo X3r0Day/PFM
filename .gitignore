@@ -1,6 +1,9 @@
 __pycache__/
 __pycache__
+output/
 nmapscan.scan
 assetfinder.txt
 subfinder.txt
 filtered.txt
+alivesubs.txt
+urls.txt

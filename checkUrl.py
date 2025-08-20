@@ -26,12 +26,12 @@ def checkURL(url):
 def verifyURL(url):
     try:
         response = requests.get(url, timeout=5)
-        print(log.info(f"{Fore.BLUE}{url}{Style.RESET_ALL} us UP! : {response.status_code}"))
+        log.info(f"{Fore.BLUE}{url}{Style.RESET_ALL} us UP! : {response.status_code}")
         return True
     except requests.ConnectionError:
-        print(log.err(f"{Fore.BLUE}{url}{Style.RESET_ALL} is DOWN! (Connection Error)"))
+        log.err(f"{Fore.BLUE}{url}{Style.RESET_ALL} is DOWN! (Connection Error)")
     except requests.Timeout:
-        print(log.err(f"{Fore.BLUE}{url}{Style.RESET_ALL} is DOWN! (Timeout)"))
+        log.err(f"{Fore.BLUE}{url}{Style.RESET_ALL} is DOWN! (Timeout)")
     except requests.RequestException as e:
-        print(log.err(f"{Fore.BLUE}{url}{Style.RESET_ALL} is DOWN! ({e})"))
+        log.err(f"{Fore.BLUE}{url}{Style.RESET_ALL} is DOWN! ({e})")
     return False

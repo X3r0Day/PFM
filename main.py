@@ -51,8 +51,8 @@ def actionSelector():
         elif selected == "3":
             global TARGET
             TARGET = input(f"Enter Target {Style.BRIGHT}(e.g, google.com){Fore.YELLOW}\n> {Style.RESET_ALL}")
-            print(log.info(f"Selecting Target {Fore.CYAN}{TARGET}"))
-            print(log.info(f"Checking if Target is up."))
+            log.info(f"Selecting Target {Fore.CYAN}{TARGET}")
+            log.info(f"Checking if Target is up.")
             checkURL(TARGET)
         elif selected == "4":
             if TARGET:
@@ -61,7 +61,7 @@ def actionSelector():
                 clearScreen()
                 startFM(TARGET)
             else:
-                print(log.err("Target Not selected!"))
+                log.err("Target Not selected!")
             
 
         elif selected == "99":

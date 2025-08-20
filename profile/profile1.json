@@ -12,9 +12,24 @@
             "active": "True",
             "passive": "False"
         },
+        "httpx": {
+            "ports": "80,443,8080,8081,8000,8001,8005,8888",
+            "command": "httpx",
+            "threadcnt": 200,
+            "_comment": "Use httpx-pd (not httpx) on Arch to avoid conflict with python-httpx. Open issue if encountered problem!"
+        },
+        "katana": {
+            "depth": 2
+        },
         "crt.sh": "True",
         "webarchive-CDX": "False",
         "VirusTotal": "False",
         "github-subdomains": "False"
-    }
+    },
+
+    "UrlFilter": {
+            "entries": 2,
+            "1": "=",
+            "2": "\\?[^=]+=.+$"
+        }
 }
