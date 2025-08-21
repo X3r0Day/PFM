@@ -21,7 +21,7 @@ intro = f'''
 '''
 
 def clearScreen():
-    os.system('cls' if os.name=='nt' else 'clear')
+    os.system('clear')
     return
 
 def startScreen():
