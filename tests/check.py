@@ -103,7 +103,7 @@ def startProf(data, target):
     )
     log.info("Saved results to output/urls.txt!")
 
-    # ---------------------------------- FILTERING URLS WITH GF ---------------------------------- #
+    # ---------------------------------- FILTERING URLS ---------------------------------- #
     subprocess.run(
         '''grep -E "\?.+=" output/urls.txt | tee output/sqli.txt''',
         shell=True
