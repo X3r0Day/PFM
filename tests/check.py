@@ -109,7 +109,7 @@ def startProf(data, target):
     for i in range(1, n+1):
         pattern = filters[str(i)]
         output = f"output{i}.txt"
-        subprocess.run(f"cat output/urls.txt | grep -E '{pattern}' | urldedupe | tee output/output.txt", shell=True)
+        subprocess.run(f"cat output/urls.txt | grep -E '{pattern}' | urldedupe | tee output/output{i}.txt", shell=True)
         log.info(f"Saved results to output/output{i}.txt")
     subprocess.run("cat output/*.txt | sort -u  > output/filteredOutput.txt", shell=True)
     log.info("Filtered urls!")
