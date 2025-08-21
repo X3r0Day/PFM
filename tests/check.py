@@ -40,25 +40,25 @@ def runTool(name, command):
 
 def startProf(data, target):
     # 1st Group
-    subprocess.run("mkdir -p output", shell=True) # Initializing output directory
+    subprocess.run("mkdir -p output/temp", shell=True) # Initializing output directory
     firstThread = []
 
-    if data["RUN"]["nmapscan"]["enabled"] == "True":
+    if data["RUN"]["nmapscan"]["enabled"] == "True": # NMAP SCAN
         print("Running NMAP")
         scanType = data["RUN"]["nmapscan"]["scantype"]
-        t = threading.Thread(target=runTool, args=("NMAP", f"{scanType} {target} | tee output/nmapscan.scan"))
+        t = threading.Thread(target=runTool, args=("NMAP", f"{scanType} {target} | tee output/temp/nmapscan.scan"))
         firstThread.append(t)
         t.start()
 
-    if data["RUN"].get("subfinder") == "True":
+    if data["RUN"].get("subfinder") == "True": # SUBFINDER SCAN
         print("Running Subfinder")
-        t = threading.Thread(target=runTool, args=("Subfinder", f"subfinder -d {target} -silent | tee output/subfinder.txt"))
+        t = threading.Thread(target=runTool, args=("Subfinder", f"subfinder -d {target} -silent | tee output/temp/subfinder.txt"))
         firstThread.append(t)
         t.start()
 
-    if data["RUN"].get("assetfinder") == "True":
+    if data["RUN"].get("assetfinder") == "True": # ASSETFINDER SCAN
         print("Running Assetfinder")
-        t = threading.Thread(target=runTool, args=("Assetfinder", f"assetfinder -subs-only {target} | tee output/assetfinder.txt"))
+        t = threading.Thread(target=runTool, args=("Assetfinder", f"assetfinder -subs-only {target} | tee output/temp/assetfinder.txt"))
         firstThread.append(t)
         t.start()
 
@@ -71,50 +71,52 @@ def startProf(data, target):
     log.suc("Scan Completed! Filtering out garbage.")
     time.sleep(1)
     os.system("clear")
-    subprocess.run("cat output/*.txt | sort -u  > output/filtered.txt", shell=True)
 
-    log.info("Garbage filtered out! Created 'output/filtered.txt'!"); time.sleep(1)
-    log.info("Cleaning up...")
-    log.info(f"Deleting {Style.BRIGHT} assetfinder.txt, subfinder.txt")
-    subprocess.run("rm output/assetfinder.txt output/subfinder.txt", shell=True)
+    # ---------------------------------- SORTING DISCOVERED SUBDOMAINS ---------------------------------- #
+    subprocess.run(
+        "sort -u output/temp/*.txt -o output/subs.txt",
+        shell=True
+    )
+    log.info("Garbage filtered out! Created 'output/subs.txt'!")
+    time.sleep(1)
 
-    log.info("Filtering alive subdomains.")
+    # ---------------------------------- CLEANING UP SUBDOMAINS STANDALONE TXT ---------------------------------- #
+    log.info("Cleaning up assetfinder.txt, subfinder.txt")
+    subprocess.run("rm -f output/temp/assetfinder.txt output/temp/subfinder.txt", shell=True)
 
-    # httpx config
+    # ---------------------------------- FILTERING LIVE SUBDOMAINS ---------------------------------- #
     httpx = data["RUN"]["httpx"]
     ports = httpx["ports"]
-    threadcnt = httpx["threadcnt"]
-    command = httpx["command"]
+    threads = httpx["threadcnt"]
 
-    subprocess.run(f"cat output/filtered.txt | httpx-pd -ports {ports} -threads {threadcnt} > output/alivesubs.txt", shell=True)
-    log.info(f"Filtered results saved to '{Style.BRIGHT}output/alivesubs.txt{Style.NORMAL}'")
+    subprocess.run(
+        f"httpx-pd -l output/subs.txt -ports {ports} -threads {threads} > output/live.txt && rm subs.txt",
+        shell=True
+    )
+    log.info("Filtered results saved to 'output/live.txt'")
 
-    '''
-    Standalone commands
-    '''
-    os.system("clear")
-    log.info(f"Runnig {Style.BRIGHT}{Fore.BLUE}katana{Style.RESET_ALL} scan")
-    time.sleep(1)
-    
-    # Katana config
+    # ---------------------------------- CRAWLING URLS USING KATANA ---------------------------------- #
     depth = data["RUN"]["katana"]["depth"]
-    subprocess.run(f"katana -u output/alivesubs.txt -d {depth} -o output/urls.txt", shell=True)
-    log.info("Saved results to output/urls.txt!\n\n")
-    time.sleep(2)
+    subprocess.run(
+        f"katana -u output/live.txt -d {depth} -o output/urls.txt",
+        shell=True
+    )
+    log.info("Saved results to output/urls.txt!")
 
-    # Filter config
-    n = data["UrlFilter"]["entries"]
-    filters = data["UrlFilter"]
-    
-    for i in range(1, n+1):
-        pattern = filters[str(i)]
-        output = f"output{i}.txt"
-        subprocess.run(f"cat output/urls.txt | grep -E '{pattern}' | urldedupe | tee output/output{i}.txt", shell=True)
-        log.info(f"Saved results to output/output{i}.txt")
-    subprocess.run("cat output/*.txt | sort -u  > output/filteredOutput.txt", shell=True)
-    log.info("Filtered urls!")
+    # ---------------------------------- FILTERING URLS WITH GF ---------------------------------- #
+    subprocess.run(
+        '''grep -E "\?.+=" output/urls.txt | tee output/sqli.txt''',
+        shell=True
+    )
+    log.info("Filtered SQLi URLs saved to output/sqli.txt")
+
+    # ---------------------------------- SORT UNIQUE ---------------------------------- #
+    # subprocess.run(
+    #    "sort -u output/sqli.txt -o output/sqli.txt",
+    #    shell=True
+    #)
+    #log.info("Final sorted SQLi URLs saved to output/sqli.txt")
 
 
     # 2nd Group
     secondThread = []
-    
