@@ -40,7 +40,7 @@ def runTool(name, command):
 
 def startProf(data, target):
     # 1st Group
-    subprocess.run("mkdir -p output/temp", shell=True) # Initializing output directory
+    subprocess.run("mkdir -p output/temp output/sqli output/xss output/lfi output/OR", shell=True) # Initializing output directory
     firstThread = []
 
     if data["RUN"]["nmapscan"]["enabled"] == "True": # NMAP SCAN
@@ -103,20 +103,19 @@ def startProf(data, target):
     )
     log.info("Saved results to output/urls.txt!")
 
-    # ---------------------------------- FILTERING URLS ---------------------------------- #
+    # ---------------------------------- FILTERING URLS FOR SQLI ---------------------------------- #
     subprocess.run(
         '''grep -E "\?.+=" output/urls.txt | tee output/sqli.txt''',
         shell=True
     )
+    subprocess.run(
+       "sort -u output/sqli.txt -o output/sqli.txt",
+       shell=True
+    )
     log.info("Filtered SQLi URLs saved to output/sqli.txt")
 
-    # ---------------------------------- SORT UNIQUE ---------------------------------- #
-    # subprocess.run(
-    #    "sort -u output/sqli.txt -o output/sqli.txt",
-    #    shell=True
-    #)
-    #log.info("Final sorted SQLi URLs saved to output/sqli.txt")
-
-
+    # ---------------------------------- FILTERING URLS FOR XSS ---------------------------------- #
+    subprocess.run()
+    
     # 2nd Group
     secondThread = []
