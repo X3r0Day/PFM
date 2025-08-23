@@ -1,3 +1,3 @@
 ### Not gonna edit readme yet... I've been kinda busy with many things so I might not push many updates, but this will be completed fs.
-
+####
 ### Okay so my plan is to make this run low hanging bugs scans too side by side.. so I am confused whether I should use GF patterns for xss and others or I should use regex... maybe regex is better but then I want to automatically inject payload to the endpoints, and I can't do that without fucking with brain so hard... so maybe I will use nuclei?? I mean thats the most simplest and robust solution I could think of... using Nuclei.
