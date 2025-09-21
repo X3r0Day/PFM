@@ -26,7 +26,16 @@
         "VirusTotal": "False",
         "github-subdomains": "False"
     },
-
+    "scanner": {
+        "enabled": "False",
+        "sqli": {
+            "enabled": "True",
+            "params": "--thread 4 --batch --tamper=space2comment --level 2 --risk 2"
+        },
+        "xss": {
+            "enabled": "False",
+        }
+    },
     "UrlFilter": {
             "entries": 2,
             "1": "=",

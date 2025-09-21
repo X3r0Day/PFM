@@ -109,13 +109,54 @@ def startProf(data, target):
         shell=True
     )
     subprocess.run(
-       "sort -u output/sqli.txt -o output/sqli/sqli.txt",
+       "sort -u output/sqli/sqli.txt -o output/sqli/sqli.txt",
        shell=True
     )
     log.info("Filtered SQLi URLs saved to output/sqli/sqli.txt")
 
     # ---------------------------------- FILTERING URLS FOR XSS ---------------------------------- #
-    # subprocess.run()
+    xss_params = (
+    "q|s|search|lang|keyword|query|page|keywords|year|view|email|type|name|p|callback|jsonp|api_key|api|"
+    "password|emailto|token|username|csrf_token|unsubscribe_token|id|item|page_id|month|immagine|"
+    "list_type|url|terms|categoryid|key|l|begindate|enddate"
+    )
+
+    subprocess.run(
+        f'''grep -Pi "\\?(?=[^#\\s]*=)({xss_params})=" output/urls.txt | tee output/xss/xss.txt''',
+        shell=True
+    )
+
+    subprocess.run(
+        "sort -u output/xss/xss.txt -o output/xss/xss.txt",
+        shell=True
+    )
+    log.info("Filtered XSS URLs saved to output/xss/xss.txt")
+
+    #---------------------------------- FILTERING URLS FOR LFI  ---------------------------------- # 
+
+
     
     # 2nd Group
     secondThread = []
+    
+
+    # ---------------------------------- SQLi Scanning -------------------------------- #
+    scanner = data["scanner"]
+    params = scanner["sqli"]["params"]
+
+    if scanner.get("enabled") == "True":
+        if scanner["sqli"]["enabled"] == "True":
+            log.info("Starting SQLi Scanner!")
+            t = threading.Thread(target=runTool, args=("SQLi", f"sqli -u {target} | tee output/temp/sqli.scan"))
+            secondThread.append(t)
+            t.start()
+
+    # Have to complete this.. I'll probably be using something more faster than sqlmap
+    # as I have bunch of urls for sqli.
+
+
+        
+        
+
+
+        
