@@ -90,7 +90,7 @@ def startProf(data, target):
     threads = httpx["threadcnt"]
 
     subprocess.run(
-        f"httpx-pd -l output/subs.txt -ports {ports} -threads {threads} > output/live.txt && rm subs.txt",
+        f"httpx-pd -l output/subs.txt -ports {ports} -threads {threads} > output/live.txt && rm -f output/subs.txt",
         shell=True
     )
     log.info("Filtered results saved to 'output/live.txt'")
@@ -105,17 +105,17 @@ def startProf(data, target):
 
     # ---------------------------------- FILTERING URLS FOR SQLI ---------------------------------- #
     subprocess.run(
-        '''grep -E "\?.+=" output/urls.txt | tee output/sqli.txt''',
+        '''grep -E "\?.+=" output/urls.txt | tee output/sqli/sqli.txt''',
         shell=True
     )
     subprocess.run(
-       "sort -u output/sqli.txt -o output/sqli.txt",
+       "sort -u output/sqli.txt -o output/sqli/sqli.txt",
        shell=True
     )
-    log.info("Filtered SQLi URLs saved to output/sqli.txt")
+    log.info("Filtered SQLi URLs saved to output/sqli/sqli.txt")
 
     # ---------------------------------- FILTERING URLS FOR XSS ---------------------------------- #
-    subprocess.run()
+    # subprocess.run()
     
     # 2nd Group
     secondThread = []
